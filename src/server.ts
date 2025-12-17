@@ -5,9 +5,27 @@ import {Pool} from 'pg';
 const app = express()
 const port = 5000
 
+// DB
 const pool = new Pool({
   connectionString: `postgresql://neondb_owner:npg_EoSQkOKG95Vm@ep-bitter-brook-a4o7u4w3-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
 })
+
+const initDB = async() =>{
+  await pool.query(`
+      CREATE TABLE IF NOT EXISTS users(
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(150) NOT NULL,
+      age INT,
+      phone VARCHAR(15),
+      address TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `)
+}
+
+initDB();
 
 // parser
 app.use(express.json());
