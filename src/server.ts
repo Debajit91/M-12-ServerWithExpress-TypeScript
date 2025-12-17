@@ -51,7 +51,8 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello Next Level Developers!')
 })
 
-app.post('/users', async (req, res)=>{
+// users CRUD
+app.post('/users', async (req:Request, res: Response)=>{
   const {name, email} = req.body;
 
   try {
@@ -70,6 +71,23 @@ app.post('/users', async (req, res)=>{
     })
   }
 
+})
+
+app.get('/users', async (req: Request, res: Response) =>{
+  try {
+    const result = await pool.query(`SELECT * FROM users`)
+    res.status(201).json({
+      success: true,
+      message: "Users Retrieved Successfully",
+      data: result.rows
+    })
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      details: error
+    })
+  }
 })
 
 app.listen(port, () => {
