@@ -102,7 +102,7 @@ app.get('/users/:id', async(req: Request, res: Response)=>{
     } else {
       res.status(200).json({
       success: true,
-      message: "User Found",
+      message: "User Fetched Successfully",
       data: user.rows[0]
     })
     }
