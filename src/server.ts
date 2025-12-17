@@ -17,7 +17,7 @@ const initDB = async() =>{
       CREATE TABLE IF NOT EXISTS users(
       id SERIAL PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
-      email VARCHAR(150) NOT NULL,
+      email VARCHAR(150) UNIQUE NOT NULL,
       age INT,
       phone VARCHAR(15),
       address TEXT,
@@ -51,13 +51,25 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello Next Level Developers!')
 })
 
-app.post('/', (req, res)=>{
-  console.log(req.body);
+app.post('/users', async (req, res)=>{
+  const {name, email} = req.body;
 
-  res.status(201).json({
-    success: true,
-    message: "API is working"
-  })
+  try {
+    const result = await pool.query(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING *`, [name, email]);
+
+   return res.status(201).json({
+      success: true,
+      message: "Data Inserted Successfully",
+      data: result.rows[0]
+    })
+    
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+
 })
 
 app.listen(port, () => {
