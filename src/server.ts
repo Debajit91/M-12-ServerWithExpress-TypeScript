@@ -188,9 +188,30 @@ app.post('/todos', async(req: Request, res: Response)=>{
   }
 })
 
-// app.get('/todos', async(req:Request, res:Response)=>{
+app.get('/todos', async(req:Request, res:Response)=>{
+  try {
+    const result = await pool.query(`SELECT * FROM todos`);
 
-// })
+    res.status(200).json({
+      success: true,
+      message: "Todos Retrieved Successfully",
+      data: result.rows
+    })
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+})
+
+app.use((req, res) =>{
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    path: req.path
+  })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
