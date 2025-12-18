@@ -114,6 +114,32 @@ app.get('/users/:id', async(req: Request, res: Response)=>{
   }
 })
 
+app.put('/users/:id', async(req: Request, res: Response)=>{
+  const {name, email} = req.body;
+
+  try {
+    const user = await pool.query(`UPDATE users SET name=$1, email=$2 WHERE id = $3 RETURNING *`, [name, email, req.params.id]);
+
+    if(user.rows.length === 0){
+      res.status(404).json({
+      success: false,
+      message: "User Not Found",
+    })
+    } else {
+      res.status(200).json({
+      success: true,
+      message: "User Updated Successfully",
+      data: user.rows[0]
+    })
+    }
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
