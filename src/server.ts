@@ -1,8 +1,7 @@
 import express, { Request, Response } from 'express'
 import config from './config';
 import initDB, { pool } from './config/db';
-
-
+import { userRoutes } from './modules/user/user.routes';
 
 
 
@@ -22,27 +21,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello Next Level Developers!')
 })
 
-// users CRUD
-app.post('/users', async (req:Request, res: Response)=>{
-  const {name, email} = req.body;
+// users Route -> localhost:5000/users
+app.use('/users', userRoutes)
 
-  try {
-    const result = await pool.query(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING *`, [name, email]);
-
-   return res.status(201).json({
-      success: true,
-      message: "Data Inserted Successfully",
-      data: result.rows[0]
-    })
-    
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    })
-  }
-
-})
 
 app.get('/users', async (req: Request, res: Response) =>{
   try {
