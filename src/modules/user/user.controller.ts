@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { pool } from "../../config/db";
+import { userService } from "./user.service";
 
 const createUser = async (req:Request, res: Response)=>{
   const {name, email} = req.body;
 
   try {
-    const result = await pool.query(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING *`, [name, email]);
+    const result = await userService.createUser(name, email);
 
    return res.status(201).json({
       success: true,
@@ -24,7 +25,7 @@ const createUser = async (req:Request, res: Response)=>{
 
 const getUsers = async (req: Request, res: Response) =>{
   try {
-    const result = await pool.query(`SELECT * FROM users`)
+    const result = await userService.getUsers();
     res.status(201).json({
       success: true,
       message: "Users Retrieved Successfully",
