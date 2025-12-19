@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { pool } from "../../config/db";
 import { userService } from "./user.service";
 
 const createUser = async (req:Request, res: Response)=>{
@@ -40,7 +39,87 @@ const getUsers = async (req: Request, res: Response) =>{
   }
 }
 
+const getSingleUser = async(req: Request, res: Response)=>{
+  try {
+    const user = await userService.getSingleUser(req.params.id as string);
+
+    if(user.rows.length === 0){
+      res.status(404).json({
+      success: false,
+      message: "User Not Found",
+    })
+    } else {
+      res.status(200).json({
+      success: true,
+      message: "User Fetched Successfully",
+      data: user.rows[0]
+    })
+    }
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+const updateUser = async(req: Request, res: Response)=>{
+  const {name, email} = req.body;
+
+  try {
+    const user = await userService.updateUser(name, email, req.params.id as string);
+
+    if(user.rows.length === 0){
+      res.status(404).json({
+      success: false,
+      message: "User Not Found",
+    })
+    } else {
+      res.status(200).json({
+      success: true,
+      message: "User Updated Successfully",
+      data: user.rows[0]
+    })
+    }
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+const deleteUser = async(req: Request, res: Response)=>{
+
+  try {
+    const user = await userService.deleteUser(req.params.id as string);
+
+    
+
+    if(user.rowCount === 0){
+      res.status(404).json({
+      success: false,
+      message: "User Not Found",
+    })
+    } else {
+      res.status(200).json({
+      success: true,
+      message: "User Deleted Successfully",
+      data: null
+    })
+    }
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
 export const userController = {
     createUser,
-    getUsers
+    getUsers,
+    getSingleUser,
+    updateUser,
+    deleteUser
 }
