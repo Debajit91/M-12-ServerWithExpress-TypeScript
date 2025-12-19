@@ -1,15 +1,17 @@
 import express, { Request, Response } from 'express'
 import {Pool} from 'pg';
-import dotenv from 'dotenv';
+import config from './config';
 
-dotenv.config();
+
+
+
 
 const app = express()
-const port = 5000
+const port = config.port
 
 // DB
 const pool = new Pool({
-  connectionString: `${process.env.CONNECTION_STR}`
+  connectionString: `${config.connection_str}`
 })
 
 const initDB = async() =>{
