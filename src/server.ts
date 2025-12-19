@@ -25,22 +25,6 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/users', userRoutes)
 
 
-app.get('/users', async (req: Request, res: Response) =>{
-  try {
-    const result = await pool.query(`SELECT * FROM users`)
-    res.status(201).json({
-      success: true,
-      message: "Users Retrieved Successfully",
-      data: result.rows
-    })
-  } catch (error:any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      details: error
-    })
-  }
-})
 
 app.get('/users/:id', async(req: Request, res: Response)=>{
   try {

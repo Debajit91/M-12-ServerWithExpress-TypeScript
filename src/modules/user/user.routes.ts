@@ -26,4 +26,22 @@ router.post('/', async (req:Request, res: Response)=>{
 
 });
 
+// get all users
+router.get('/', async (req: Request, res: Response) =>{
+  try {
+    const result = await pool.query(`SELECT * FROM users`)
+    res.status(201).json({
+      success: true,
+      message: "Users Retrieved Successfully",
+      data: result.rows
+    })
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      details: error
+    })
+  }
+})
+
 export const userRoutes = router;
