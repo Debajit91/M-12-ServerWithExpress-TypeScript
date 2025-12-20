@@ -3,6 +3,7 @@ import config from './config';
 import initDB, { pool } from './config/db';
 import { userRoutes } from './modules/user/user.routes';
 import { todoRoutes } from './modules/todo/todo.routes';
+import { authRoutes } from './modules/auth/auth.routes';
 
 
 
@@ -23,13 +24,13 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 // users Route -> localhost:5000/users
-app.use('/users', userRoutes)
+app.use('/users', userRoutes);
 
+// todos Route
+app.use('/todos', todoRoutes);
 
-// todos crud
-app.use('/todos', todoRoutes)
-
-
+// auth Route
+app.use('/auth', authRoutes);
 
 app.use((req, res) =>{
   res.status(404).json({
