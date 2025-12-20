@@ -22,6 +22,8 @@ const loginUser = async(email:string, password:string)=>{
         expiresIn: '3d',
     })
 
+    console.log(token);
+
     return {token, user};
 
 }
